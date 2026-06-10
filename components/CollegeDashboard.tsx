@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState, useRef, useEffect, useCallback } from "react";
+import * as XLSX from "xlsx";
 import { motion, AnimatePresence, useReducedMotion, useInView } from "framer-motion";
 import {
   ArrowLeft,
@@ -109,8 +110,7 @@ function computeDuration(checkIn: string, checkOut: string): string {
   return h > 0 ? `${h}h ${m}m` : `${m}m`;
 }
 
-async function downloadStudentExcel(intern: string[], pairs: AttendancePair[]) {
-  const XLSX = (await import("xlsx")).default;
+function downloadStudentExcel(intern: string[], pairs: AttendancePair[]) {
 
   const name     = intern[1] || "Intern";
   const id       = intern[0] || "";
