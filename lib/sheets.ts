@@ -15,7 +15,23 @@ function cleanEnvValue(val?: string) {
 function cleanPrivateKey(key?: string) {
   const cleaned = cleanEnvValue(key);
   if (!cleaned) return undefined;
-  return cleaned.replace(/\\n/g, "\n");
+  
+  const result = cleaned.replace(/\\n/g, "\n");
+  
+  console.log("DEBUG PRIVATE KEY:", {
+    rawLength: key?.length,
+    cleanedLength: cleaned.length,
+    resultLength: result.length,
+    rawStart: key?.substring(0, 30),
+    rawEnd: key?.substring((key?.length || 0) - 30),
+    resultStart: result.substring(0, 30),
+    resultEnd: result.substring(result.length - 30),
+    hasRawNewlines: key?.includes("\n"),
+    hasRawEscapedNewlines: key?.includes("\\n"),
+    hasResultNewlines: result.includes("\n"),
+  });
+  
+  return result;
 }
 
 function getSheetsClient() {
