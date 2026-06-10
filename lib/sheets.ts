@@ -1,5 +1,17 @@
 import { google } from "googleapis";
 
+function cleanPrivateKey(key?: string) {
+  if (!key) return undefined;
+  let cleanKey = key.trim();
+  if (cleanKey.startsWith('"') && cleanKey.endsWith('"')) {
+    cleanKey = cleanKey.slice(1, -1);
+  }
+  if (cleanKey.startsWith("'") && cleanKey.endsWith("'")) {
+    cleanKey = cleanKey.slice(1, -1);
+  }
+  return cleanKey.replace(/\\n/g, "\n");
+}
+
 function getSheetsClient() {
   // Use separate credentials for Vercel, fallback to keyFile for local Windows dev
   const authOptions: any = {
@@ -9,8 +21,7 @@ function getSheetsClient() {
   if (process.env.GOOGLE_PRIVATE_KEY && process.env.GOOGLE_CLIENT_EMAIL) {
     authOptions.credentials = {
       client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      // Handle escaped newlines in the private key from Vercel env
-      private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+      private_key: cleanPrivateKey(process.env.GOOGLE_PRIVATE_KEY),
     };
   } else {
     authOptions.keyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
