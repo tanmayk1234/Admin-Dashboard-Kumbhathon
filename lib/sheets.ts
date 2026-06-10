@@ -1,8 +1,22 @@
 import { google } from "googleapis";
 
-function cleanEnvValue(val?: string) {
+function cleanEnvValue(val?: string, jsonKey?: string) {
   if (!val) return "";
   let clean = val.trim();
+  
+  if (clean.startsWith("{")) {
+    try {
+      const parsed = JSON.parse(clean);
+      if (jsonKey && parsed[jsonKey]) {
+        clean = parsed[jsonKey].trim();
+      } else if (parsed.client_email) {
+        clean = parsed.client_email.trim();
+      }
+    } catch (e) {
+      console.error("Failed to parse JSON env value:", e);
+    }
+  }
+
   if (clean.startsWith('"') && clean.endsWith('"')) {
     clean = clean.slice(1, -1);
   }
@@ -13,7 +27,21 @@ function cleanEnvValue(val?: string) {
 }
 
 function cleanPrivateKey(key?: string) {
-  const cleaned = cleanEnvValue(key);
+  if (!key) return undefined;
+  let cleanKey = key.trim();
+  
+  if (cleanKey.startsWith("{")) {
+    try {
+      const parsed = JSON.parse(cleanKey);
+      if (parsed.private_key) {
+        cleanKey = parsed.private_key.trim();
+      }
+    } catch (e) {
+      console.error("Failed to parse GOOGLE_PRIVATE_KEY as JSON:", e);
+    }
+  }
+  
+  const cleaned = cleanEnvValue(cleanKey);
   if (!cleaned) return undefined;
   
   const result = cleaned.replace(/\\n/g, "\n");
@@ -45,7 +73,7 @@ function getSheetsClient() {
 
   if (privateKey && clientEmail) {
     authOptions.credentials = {
-      client_email: cleanEnvValue(clientEmail),
+      client_email: cleanEnvValue(clientEmail, "client_email"),
       private_key: cleanPrivateKey(privateKey),
     };
   } else {
