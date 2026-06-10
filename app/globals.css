@@ -1,0 +1,253 @@
+@import "tailwindcss";
+
+/* ── Kumbhathon Design System ── */
+
+:root {
+  /* Color Palette */
+  --primary-terracotta: #C8553D;
+  --deep-terracotta: #8B3A2A;
+  --cream: #FBF6EE;
+  --warm-sand: #F2E4D0;
+  --charcoal: #1F1410;
+  --muted-brown: #6B4F3F;
+  --success-green: #4A7C59;
+  --error-red: #B33A3A;
+
+  /* Shadows */
+  --shadow-card: 0 4px 24px rgba(200, 85, 61, 0.08);
+  --shadow-card-hover: 0 8px 32px rgba(200, 85, 61, 0.12);
+  --shadow-button: 0 2px 12px rgba(200, 85, 61, 0.15);
+  --shadow-button-hover: 0 6px 20px rgba(200, 85, 61, 0.2);
+
+  /* Spacing (8px grid) */
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --space-4: 32px;
+  --space-5: 40px;
+  --space-6: 48px;
+  --space-8: 64px;
+  --space-10: 80px;
+  --space-12: 96px;
+
+  /* Radii */
+  --radius-card: 16px;
+  --radius-pill: 9999px;
+  --radius-input: 12px;
+}
+
+/* ── Tailwind v4 Theme Extension ── */
+@theme inline {
+  --color-primary-terracotta: var(--primary-terracotta);
+  --color-deep-terracotta: var(--deep-terracotta);
+  --color-cream: var(--cream);
+  --color-warm-sand: var(--warm-sand);
+  --color-charcoal: var(--charcoal);
+  --color-muted-brown: var(--muted-brown);
+  --color-success-green: var(--success-green);
+  --color-error-red: var(--error-red);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-fraunces);
+
+  --radius-card: 16px;
+  --radius-pill: 9999px;
+  --radius-input: 12px;
+}
+
+/* ── Base Styles ── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--charcoal);
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Focus Ring ── */
+*:focus-visible {
+  outline: 2px solid var(--primary-terracotta);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ── Grain Noise Overlay ── */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0.04;
+}
+
+.grain-overlay svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── Card Shadows ── */
+.shadow-card {
+  box-shadow: var(--shadow-card);
+}
+
+.shadow-card-hover {
+  box-shadow: var(--shadow-card-hover);
+}
+
+.shadow-button {
+  box-shadow: var(--shadow-button);
+}
+
+.shadow-button-hover {
+  box-shadow: var(--shadow-button-hover);
+}
+
+/* ── Terracotta Pill Button ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 40px;
+  background-color: var(--primary-terracotta);
+  color: var(--cream);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-weight: 500;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  border-radius: var(--radius-pill);
+  border: none;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, background-color 0.2s ease;
+  box-shadow: var(--shadow-button);
+}
+
+.btn-primary:hover {
+  background-color: var(--deep-terracotta);
+  box-shadow: var(--shadow-button-hover);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── Input Styles ── */
+.input-field {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: white;
+  border: 1.5px solid var(--warm-sand);
+  border-radius: var(--radius-input);
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 1rem;
+  color: var(--charcoal);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input-field::placeholder {
+  color: var(--muted-brown);
+  opacity: 0.6;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary-terracotta);
+  box-shadow: 0 0 0 3px rgba(200, 85, 61, 0.12);
+}
+
+.input-field.error {
+  border-color: var(--error-red);
+  box-shadow: 0 0 0 3px rgba(179, 58, 58, 0.1);
+}
+
+/* ── Select Styles ── */
+.select-field {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B4F3F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 44px;
+}
+
+/* ── Skeleton Loading ── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--warm-sand) 25%,
+    rgba(242, 228, 208, 0.5) 50%,
+    var(--warm-sand) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: var(--radius-input);
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Offline Banner ── */
+.offline-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 12px 16px;
+  background-color: var(--error-red);
+  color: white;
+  text-align: center;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cream);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--warm-sand);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-brown);
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .skeleton {
+    animation: none;
+  }
+}
+
+/* ── Utilities ── */
+.text-balance {
+  text-wrap: balance;
+}
+
+.tracking-wide-custom {
+  letter-spacing: 0.2em;
+}
