@@ -24,14 +24,14 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "Kumbhathon Intern Check-In Portal",
+  title: "Kumbhathon Admin Dashboard",
   description:
-    "Track intern attendance via QR scan and geolocation verification at Kumbhathon Innovation Foundation.",
+    "Admin dashboard for tracking intern attendance at Kumbhathon Innovation Foundation.",
   openGraph: {
-    title: "Kumbhathon Intern Check-In Portal",
+    title: "Kumbhathon Admin Dashboard",
     description:
-      "Daily check-in and check-out system for Kumbhathon Innovation Foundation interns.",
-    siteName: "Kumbhathon Portal",
+      "Admin dashboard for real-time intern attendance monitoring at Kumbhathon Innovation Foundation.",
+    siteName: "Kumbhathon Dashboard",
     type: "website",
   },
   icons: {
