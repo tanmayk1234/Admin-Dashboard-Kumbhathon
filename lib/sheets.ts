@@ -1,15 +1,21 @@
 import { google } from "googleapis";
 
+function cleanEnvValue(val?: string) {
+  if (!val) return "";
+  let clean = val.trim();
+  if (clean.startsWith('"') && clean.endsWith('"')) {
+    clean = clean.slice(1, -1);
+  }
+  if (clean.startsWith("'") && clean.endsWith("'")) {
+    clean = clean.slice(1, -1);
+  }
+  return clean;
+}
+
 function cleanPrivateKey(key?: string) {
-  if (!key) return undefined;
-  let cleanKey = key.trim();
-  if (cleanKey.startsWith('"') && cleanKey.endsWith('"')) {
-    cleanKey = cleanKey.slice(1, -1);
-  }
-  if (cleanKey.startsWith("'") && cleanKey.endsWith("'")) {
-    cleanKey = cleanKey.slice(1, -1);
-  }
-  return cleanKey.replace(/\\n/g, "\n");
+  const cleaned = cleanEnvValue(key);
+  if (!cleaned) return undefined;
+  return cleaned.replace(/\\n/g, "\n");
 }
 
 function getSheetsClient() {
@@ -18,10 +24,13 @@ function getSheetsClient() {
     scopes: ["https://www.googleapis.com/auth/spreadsheets"],
   };
 
-  if (process.env.GOOGLE_PRIVATE_KEY && process.env.GOOGLE_CLIENT_EMAIL) {
+  const privateKey = process.env.GOOGLE_PRIVATE_KEY;
+  const clientEmail = process.env.GOOGLE_CLIENT_EMAIL;
+
+  if (privateKey && clientEmail) {
     authOptions.credentials = {
-      client_email: process.env.GOOGLE_CLIENT_EMAIL,
-      private_key: cleanPrivateKey(process.env.GOOGLE_PRIVATE_KEY),
+      client_email: cleanEnvValue(clientEmail),
+      private_key: cleanPrivateKey(privateKey),
     };
   } else {
     authOptions.keyFile = process.env.GOOGLE_APPLICATION_CREDENTIALS;
@@ -31,7 +40,7 @@ function getSheetsClient() {
   return google.sheets({ version: "v4", auth });
 }
 
-const SPREADSHEET_ID = process.env.GOOGLE_SHEETS_SPREADSHEET_ID!;
+const SPREADSHEET_ID = cleanEnvValue(process.env.GOOGLE_SHEETS_SPREADSHEET_ID);
 
 // ── Simple in-memory cache to reduce Google Sheets API calls ──
 
