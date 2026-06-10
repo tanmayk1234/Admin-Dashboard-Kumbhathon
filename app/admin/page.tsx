@@ -34,7 +34,8 @@ export default function AdminPage() {
   // Restore session on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
-      if (sessionStorage.getItem("kumbhathon_admin") === "true") {
+      const token = sessionStorage.getItem("kumbhathon_admin_token");
+      if (token) {
         setScreen("picker");
       }
     }
@@ -44,7 +45,12 @@ export default function AdminPage() {
   const fetchData = useCallback(async (silent = false) => {
     if (!silent) setDataLoading(true);
     try {
-      const res = await fetch("/api/admin");
+      const token = sessionStorage.getItem("kumbhathon_admin_token") || "";
+      const res = await fetch("/api/admin", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const result = await res.json();
       if (!res.ok) throw new Error(result.error);
       setData(result);
@@ -88,7 +94,7 @@ export default function AdminPage() {
       });
       const result = await res.json();
       if (!res.ok) throw new Error(result.error);
-      sessionStorage.setItem("kumbhathon_admin", "true");
+      sessionStorage.setItem("kumbhathon_admin_token", password);
       setScreen("picker");
     } catch {
       toast.error("Incorrect password. Try again.");
@@ -98,7 +104,7 @@ export default function AdminPage() {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("kumbhathon_admin");
+    sessionStorage.removeItem("kumbhathon_admin_token");
     setData(null);
     setSelectedCollege(null);
     setPassword("");

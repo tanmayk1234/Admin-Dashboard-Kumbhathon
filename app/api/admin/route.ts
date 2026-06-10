@@ -32,8 +32,18 @@ export async function POST(request: NextRequest) {
 }
 
 // GET: Fetch dashboard data
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const authHeader = request.headers.get("Authorization");
+    const token = authHeader?.replace("Bearer ", "");
+
+    if (!token || token !== process.env.ADMIN_PASSWORD) {
+      return NextResponse.json(
+        { error: "Unauthorized" },
+        { status: 401 }
+      );
+    }
+
     const stats = await getDashboardStats();
 
     return NextResponse.json({
